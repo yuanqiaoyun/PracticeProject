@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>百度云盘项目练习--跟敲</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+  <main id="page">
+    <!-- 头部区域开始-->
+    <header id="header">
+      <h1 id="logo">
+        <img src="./img/logo.png" alt="baidulogo">
+      </h1>
+      <nav class="top-nav">
+        <a class="iconfont icon-xinjian">新建文件夹</a>
+        <a class="iconfont icon-lajitong">删除</a>
+        <a class="iconfont icon-yidong">移动到</a>
+      </nav>
+    </header>
+    <!-- 头部区域结束 -->
+
+    <!-- 内容区域开始 -->
+    <div id="content">
+     <!-- 区域左侧导航开始 -->
+     <aside id="tree-menu" class="tree-menu">
+      <!-- <ul>
+        <li class="open">
+          <p class="has-child"><span>一级菜单</span></p>
+          <ul>
+            <li class="open">
+              <p class="has-child" style="padding-left: 68px;"><span>二级菜单</span></p>
+              <ul>
+                <li class="open">
+                  <p style="padding-left: 96px;"><span>三级菜单</span></p>
+                </li>
+                <li class="open">
+                  <p style="padding-left: 96px;"><span>三级菜单2</span></p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul> -->
+     </aside>
+     <!-- 区域左侧导航结束 -->
+
+     <!-- 右边文件夹内容开始 -->
+     <article id="floder-content">
+       <!-- 路径导航 -->
+       <div id="breadmenu">
+         <label class="checked-all checked">
+           <input type="checkbox" id="checked-all"/>
+           <span class="iconfont"></span>
+         </label>
+         <nav class="bread-nav">
+           <!-- <a>微云</a>
+           <a>js课程</a>
+           <span>Dom操作</span> -->
+         </nav>
+       </div>
+       <!-- 路径导航 -->
+       <ul id="floders">
+         <!-- <li class="floder-item">
+           <img src="./img/folder-b.png" alt=""/>
+           <span class="floder-name">JS程序设计</span>
+         </li> -->
+       </ul>
+     </article>
+     <!-- 右边文件夹内容结束 -->
+    </div>
+    <!-- 内容区域结束 -->
+  </main>
+<script src="./js/data.js"></script>
+<script src="./js/index.js"></script>
+</body>
+
+</html>
