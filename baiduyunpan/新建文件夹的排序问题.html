@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>新建文件夹的排序问题</title>
+</head>
+<body>
+</body>
+<script>
+  let data =["我的音乐",'我的课程',"新建文件夹"];
+
+  // 新建文件夹   新建文件夹2  新建文件夹3 
+  /* 
+  规律1:新建文件夹
+  规律2:前六个 “新建文件夹(” +  number +  最后一位是：“ ）”
+  filter:接受一个回调函数,当你回调函数返回true的时候就会把这条数据保存下来，放在新的数组中。
+         返回false的话 就不会保存在返回的新的数组中。
+  对比 map 对比map map函数
+   */
+  document.onclick =function(){
+    let newData = data.filter(item=>{
+       if(item === "新建文件夹"){
+         return true;
+       }
+      //  console.log(item.substring(0,6) === "新建文件夹(",Number(item.substring(6,item.length -1))>=2,item[item.length -1] === ")"); 
+       if(item.substring(0,6) === "新建文件夹("
+        && Number(item.substring(6,item.length -1))>=2
+        && item[item.length -1] === ")")
+       {
+         return true;
+       }
+       return false;
+     });
+     console.log(newData);
+     if(newData.length<1){
+       data.push("新建文件夹");
+     }else{
+       data.push(`新建文件夹(${newData.length+1})`)
+     }
+     
+     
+  }
+</script>
+</html>

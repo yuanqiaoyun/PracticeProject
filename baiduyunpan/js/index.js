@@ -170,4 +170,51 @@ floders.addEventListener("click",function(e){
   
 })
 
+// 新建文件夹功能
+
+let createBtn = document.querySelector(".create-btn");
+createBtn.addEventListener('click',function(){
+     data.push({
+       id: Date.now(),
+       pid:nowId,
+       title:getName()
+     });
+    //  console.log(data);
+     render();
+});
+
+function getName(){
+  let child = getChildren(nowId);  // 拿到当前节点下的所有子集
+  let newData = child.map(item=>item.title); // 拿到子集数组中每一个对象的title项。
+   newData = newData.filter(item=>{
+       if(item === "新建文件夹"){
+         return true;
+       }
+      //  console.log(item.substring(0,6) === "新建文件夹(",Number(item.substring(6,item.length -1))>=2,item[item.length -1] === ")"); 
+       if(item.substring(0,6) === "新建文件夹("
+        && Number(item.substring(6,item.length -1))>=2
+        && item[item.length -1] === ")")
+       {
+         return true;
+       }
+       return false;
+     });
+    newData.sort((n1,n2)=>{
+       n1 = n1.substring(6,n1.length -1);
+       n2 = n2.substring(6,n2.length -1);
+       n1 = isNaN(n1)?0:n1;
+       n2 = isNaN(n2)?0:n2;
+       return n1 -n2;
+     });
+     if(newData[0] !== "新建文件夹"){
+         return "新建文件夹";
+     }
+     for(let i= 1;i<newData.length;i++){
+       if(Number(newData[i].substring(6,newData[i].length-1)) !== i+1){
+         return `新建文件夹(${i+1})`;
+       }
+     }
+     return `新建文件夹(${newData.length+1})`;
+}
+
 }
