@@ -181,8 +181,9 @@ createBtn.addEventListener('click',function(){
      });
     //  console.log(data);
      render();
+     alertSuccess("添加成功");
 });
-
+// 默认新建文件的名称
 function getName(){
   let child = getChildren(nowId);  // 拿到当前节点下的所有子集
   let newData = child.map(item=>item.title); // 拿到子集数组中每一个对象的title项。
@@ -217,4 +218,103 @@ function getName(){
      return `新建文件夹(${newData.length+1})`;
 }
 
+// 成功弹窗出现
+function alertSuccess(info){
+  let succ = document.querySelector(".alert-success");
+  succ.innerHTML = info;
+   succ.classList.add("alert-show");
+   setTimeout(()=>{
+     succ.classList.remove("alert-show");
+   },1000)
+}
+
+
+//警告弹窗
+function alertWarning(info){
+  let succ = document.querySelector(".alert-warning");
+  succ.innerHTML = info;
+   succ.classList.add("alert-show");
+   setTimeout(()=>{
+     succ.classList.remove("alert-show");
+   },1000)
+}
+
+/* 
+ 右键菜单事件
+ */
+// 阻止默认系统的右键事件 这里在全局监听
+// 这里的contextmenu是类似于click的固定的 规定的事件名  代表鼠标右键事件
+ let contextmenu = document.querySelector("#contextmenu");
+  document.addEventListener("contextmenu",function(e){  
+    // contextmenu.style.display = "none";  
+    // 这里如果不加这个样式，以及下面 判断floder存在的时候不加那个阻止冒泡事件以及会有什么bug;
+     e.preventDefault();
+  });
+
+  // 防止右键以后，点击其他区域，但是还是存在。
+  window.addEventListener("mousedown",function(e){
+    contextmenu.style.display = "none" ;
+  })
+
+  // 窗口改变的时候也要让他消失
+  window.addEventListener('resize',function(e){
+    contextmenu.style.display = "none" ;
+  });
+  // 滚动的时候
+  window.addEventListener("scroll",function(e){
+    contextmenu.style.display = "none" ;
+  })
+  /* 
+  自身的右键事件还是采用事件代理的方式,我们的右键事件只有在点击文件夹的时候才触发的
+  所以这里使用floders代理即可
+   */
+  
+  floders.addEventListener("contextmenu",function(e){
+    let floder = null ;
+    if(e.target.tagName ===  "LI"){
+      floder = e.target;
+    }else if(e.target.parentNode.tagName === "LI"){
+      floder = e.target.parentNode;
+    }
+    if(floder){
+      // 这里要阻止一下冒泡,否则又会冒到 doucment 那里去了;
+      contextmenu.style.display =  "block";
+      /* 
+      由于上面加了那个样式的249行 display 为none。所以这里需要再加一阻止冒泡的事件
+       */
+      // e.stopPropagation();
+      // 加完阻止冒泡事件以后，顺带也会把那个右键默认事件也给阻止掉了，就不起作用了，所以还需要再次
+      // 阻止一下默认的事件
+      // e.preventDefault();
+      let lstx = e.clientX;
+      let lsty = e.clientY;
+      let maxX= document.documentElement.clientWidth - contextmenu.offsetWidth ;
+      let maxY= document.documentElement.clientHeight - contextmenu.offsetHeight;
+      lstx = Math.min(lstx,maxX);
+      lsty = Math.min(lsty,maxY);
+      contextmenu.style.left = lstx + "px";
+      contextmenu.style.top = lsty + "px";
+      contextmenu.floder = floder;  
+      // 这句和下面的点击移动删除以及重命名  怎么在点击的时候就能拿到this.floder 了？
+      //  这里是什么关系呢？
+    }
+
+    //以上逻辑走完以后，当你鼠标在了那个悬浮出的菜单以后，会冒泡到document上去，然后那个菜单又会消失了。
+    // 所以这个地方还要再做一个阻止冒泡的事件。只不过这个是那个contextmenu冒上去的。所以就阻止contextmenu
+    // 的冒泡就可以了。
+    contextmenu.addEventListener("mousedown",function(e){
+      e.stopPropagation();
+    });
+
+    contextmenu.addEventListener("click",function(e){
+        contextmenu.style.display = "none";
+        if(e.target.classList.contains("icon-lajitong")){
+          console.log("删除", this.floder);
+        }else if(e.target.classList.contains("icon-yidong")){
+          console.log("移动");
+        }else if(e.target.classList.contains("icon-zhongmingming")){
+          console.log("重命名"); 
+        }
+    });
+  })
 }
