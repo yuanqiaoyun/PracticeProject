@@ -58,6 +58,46 @@ Array  getAllParent()  根据当前项的id 获取它所有的父级
  }
 
 
+/* 
+ 获取所有的子集  getAllChidren(id)  
+ 这里注意区别 getChildren()方法;getChildren找到的只有儿子。
+ 而getAllChldren(id);不仅要找到儿子还要找到孙子
+ 参数：
+    当前项数据的id ;
+  返回值：
+    返回值：当前项数据下面的所有子集 
+ */
+function getAllChildren(id){
+  let children = getChildren(id);
+  let allChildren =[];
+  if(children.length>0){
+    // 先把孩子放在数组中去
+    allChildren = allChildren.concat(children);
+    //然后再去循环每一个孩子递归调用
+    children.forEach(item=>{
+      allChildren = allChildren.concat(getChildren(item.id));
+    });
+  }
+  return allChildren;
+}
+/* 
+ 删除单项数据  removeData(id) 通过id  删除当前项的数据
+ 参数：
+    当前项数据的id ; 
+ */
+function removeData(id){
+  let remove = getAllChildren(id);
+  remove.push(getSelf(id));
+  data =  data.filter(item=>!remove.includes(item));
+  console.log(data);
+  /* 
+  这里如果这样写话 会有一个问题，就是的昂你删除一个含有子文件夹的文件时候，
+  被删除的文件夹不存在了，但是该文件夹的所有子文件还在。
+  所以这里还需要再获取一下他的所有子集，把该文件夹下的所有子集也都删除完。
+   */
+   render();
+}
+
  /* 视图渲染 */
 
  /* 视图渲染 */
@@ -309,12 +349,58 @@ function alertWarning(info){
     contextmenu.addEventListener("click",function(e){
         contextmenu.style.display = "none";
         if(e.target.classList.contains("icon-lajitong")){
-          console.log("删除", this.floder);
+          // console.log("删除", this.floder);
+          confirm("您确定删除此文件夹吗",()=>{
+               removeData(Number(this.floder.dataset.id));
+               render();
+               alertSuccess("删除成功");
+          })
+          
         }else if(e.target.classList.contains("icon-yidong")){
           console.log("移动");
         }else if(e.target.classList.contains("icon-zhongmingming")){
           console.log("重命名"); 
         }
     });
-  })
+  });
+ 
+ // 确认操作的实现
+ /* 
+ 封装的时候，接收两个回调参数，一个提示信息
+ 第一个参数:表示是确定时候的回调函数。
+ 第二个参数:表示取消的函数
+ 第三个参数:里边的文案内容
+  */
+ let confirmEl = document.querySelector(".confirm");
+ let confirmText = document.querySelector(".confirm-text");
+ let closConfirm = confirmEl.querySelector(".clos");
+ let mask = document.querySelector("#mask");
+ let confirmBtns = document.querySelectorAll(".confirm-btns a");
+
+//  confirm();
+ function confirm(info,resolve,reject){
+   confirmText.innerHTML = info;
+   confirmEl.classList.add("confirm-show");
+   mask.style.display = "block";
+   /* 
+   这个地方注意一下：不要在使用事件监听了，不然会导致每调用一次弹窗就会添加一个事件？
+   这里不太理解？？？？？等着问肖磊
+    */
+   confirmBtns[0].onclick = function(){
+       confirmEl.classList.remove("confirm-show");
+       mask.style.display = "none";
+       resolve && resolve();
+   }
+   // 取消
+    confirmBtns[1].onclick = function(){
+       confirmEl.classList.remove("confirm-show");
+      mask.style.display = "none";
+       reject && reject();
+   }
+ }
+
+closConfirm.addEventListener('click',function(){
+  confirmEl.classList.remove("confirm-show");
+  mask.style.display = "none";
+})
 }

@@ -292,3 +292,76 @@ ul li{
     width: 26px;
     text-align: center;
 }
+
+#mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    display: none;
+}
+.confirm {
+    position: fixed;
+    left: 50%;
+    top: -50%;
+    opacity: 0;
+    transform: translate(-50%,-50%);
+    width: 246px;
+    padding: 42px 35px 27px 35px;
+    border: 2px solid #55addc;
+    border-radius: 10px;
+    background: #fff;
+    transition: .2s opacity, 0s .2s top;
+}
+.confirm.confirm-show,
+.move-alert.move-alert-show {
+    transition: .1s opacity;
+    top: 50%;
+    opacity: 1;
+}
+.clos {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 16px;
+    line-height: 1;
+    color: #55addc;
+    transition: .6s;
+    cursor: pointer;
+}
+.clos:hover {
+    transform: rotate(360deg);
+}
+.confirm-text {
+    position: relative;
+    padding-left: 50px;
+    font: 16px/36px "微软雅黑";
+}
+.confirm-text:before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 36px;
+    line-height: 1;
+    color: #a5aeb4;
+}
+.confirm-btns {
+    padding: 20px 0 0 20px;
+    display: flex;
+}
+.confirm-btns a {
+    margin: 0 12px;
+    width: 78px;
+    font: 16px/28px "微软雅黑";
+    text-align: center;
+    border: 1px solid #55addc;
+    color: #55addc;
+    border-radius: 3px;
+}
+.confirm-btns a:nth-child(1) {
+    color: #fff;
+    background: #55addc;
+}
