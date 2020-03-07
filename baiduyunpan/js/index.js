@@ -122,6 +122,50 @@ function testName(id,newName){
   return children.some(item=>item.title == newName);
 }
 
+/* 
+changeChecked(id,checked) 元素选中或者不选中
+参数：
+   id: 该元素的ID
+   checked:选中状态
+ */
+function changeChecked(id,checked){
+  let selfData = getSelf(id);
+  selfData.checked  = checked;
+  console.log(data); 
+}
+
+/* 
+isCheckAll() 判断当前视图中的数据是否全选了
+返回值:
+ true 全选 ||  false 不全选 
+ */
+function  isCheckAll(){
+  let child = getChildren(nowId);
+  return child.every(item=>item.checked)&&child.length > 0;
+}
+// 操作是否全选
+   let checkAll = document.querySelector('#checked-all');
+   function setCheckAll(){
+     checkAll.checked = isCheckAll();
+   }
+   checkAll.onchange = function(){
+     console.log(this.checked);
+     setAllChecked(this.checked);
+     floders.innerHTML = renderFloders();
+   }
+/* 
+setAllChecked(checked) 判断是否全选或者不全选
+参数：
+  checked  全选或者不全选
+ */
+// 一次把所有的都选中或者一次把所有的都取消
+function setAllChecked(checked){
+ let chidren = getChildren(nowId);
+ chidren.forEach(item=>{
+   item.checked = checked;
+ })
+}
+
  /* 视图渲染 */
 
  /* 视图渲染 */
@@ -183,12 +227,12 @@ function renderFloders(){
    let children = getChildren(nowId);
    let floderInner="";
    children.forEach(item=>{
-     floderInner += `<li class="floder-item" data-id="${item.id}">
+     floderInner += `<li class="floder-item ${item.checked?"active":''}" data-id="${item.id}">
            <img src="./img/folder-b.png" alt=""/>
            <span class="floder-name">${item.title}</span>
            <input type="text" class="editor" value="${item.title}">
               <label class="checked">
-                <input type="checkbox" />
+                <input type="checkbox" ${item.checked?"checked":''}/>
                 <span class="iconfont icon-checkbox-checked"></span>
               </label>
          </li>`;
@@ -210,6 +254,9 @@ treeMenu.addEventListener("click",function(e){
   item = e.target.tagName ==="SPAN"?e.target.parentNode:e.target;
   if(item){
     nowId = item.dataset.id;
+    data.forEach(item=>{
+     delete item.checked;
+    })
     render();
   }
 })
@@ -252,6 +299,7 @@ createBtn.addEventListener('click',function(){
     //  console.log(data);
      render();
      alertSuccess("添加成功");
+     setCheckAll();
 });
 // 默认新建文件的名称
 function getName(){
@@ -308,6 +356,10 @@ function alertWarning(info){
      succ.classList.remove("alert-show");
    },1000)
 }
+
+document.addEventListener("selectstart",function(e){
+   e.preventDefault();
+})
 
 /* 
  右键菜单事件
@@ -423,6 +475,22 @@ function alertWarning(info){
         }
     });
   });
+
+  //文件夹选中
+  floders.addEventListener('change',function(e){
+    if(e.target.type === "checkbox"){
+      // if(e.target){
+      //   e.target.parentNode.parentNode.classList.add("active");
+      // }else{
+      //   e.target.parentNode.parentNode.classList.remove("active");
+      // }
+      let id = e.target.parentNode.parentNode.dataset.id;
+      changeChecked(id,e.target.checked);
+       floders.innerHTML = renderFloders();
+      setCheckAll();
+
+    }
+  })
  
  // 确认操作的实现
  /* 
@@ -501,8 +569,9 @@ closConfirm.addEventListener('click',function(){
      reject && reject();
    };
  }
-// 重命名功能
 
+
+// 重命名功能
 function reName(floder){
   let floderName = floder.querySelector(".floder-name");
   console.log(floderName);
@@ -536,4 +605,6 @@ function reName(floder){
          alertSuccess("重命名成功");
   }
 }
+
+
 }
