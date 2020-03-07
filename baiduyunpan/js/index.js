@@ -98,6 +98,30 @@ function removeData(id){
    render();
 }
 
+/* 
+移动数据  moveData(id,newPid)  把当前数据的pid 改成点击的newPid
+参数：
+   自身id;
+   新的父级的id;
+ */
+function moveData(id,newPid){
+  let self = getSelf(id);
+  self.pid = newPid;
+}
+
+/* 
+检测名字 testName(id,newName) 根据id,检查下该id下的子元素的名字和newName是否有冲突
+参数：
+  id:数据的id。
+  newName:新名字
+返回值：
+   若true 返回true,没有冲突返回false。
+ */
+function testName(id,newName){
+  let children = getChildren(id);
+  return children.some(item=>item.title == newName);
+}
+
  /* 视图渲染 */
 
  /* 视图渲染 */
@@ -113,7 +137,8 @@ function removeData(id){
 1.open的状态的时候，当前项是打开状态的时候，就要保证当前项所有的父级也是要打开的状态。
 所以还要找到当前项的父级
 */
-function renderTreeMenu(pid,level){  // level控制层级从而控制每一层的缩进距离
+function renderTreeMenu(pid,level,isOpen){  // level控制层级从而控制每一层的缩进距离,
+//  isOpen 用来表示判断弹窗里边的渲染
   let child = getChildren(pid);  // 根据父id 获取子级 最顶层的父id 就是顶层数据的pid
   /* 
  根据当前项的id，找到当前项这个对象本身。以及所对应的所有的父级。
@@ -124,7 +149,7 @@ function renderTreeMenu(pid,level){  // level控制层级从而控制每一层�
   <ul>
      ${child.map(item=>{
        let itemChild = getChildren(item.id);
-       return `<li class="${nowAllParent.includes(item)?"open":''}">
+       return `<li class="${(nowAllParent.includes(item)||isOpen)?"open":''}">
          <p 
          style="padding-left:${40+level*15}px" 
          class="${itemChild.length>0?"has-child":''} ${item.id==nowId?"active":''}"
@@ -132,7 +157,7 @@ function renderTreeMenu(pid,level){  // level控制层级从而控制每一层�
          >
          <span>${item.title}</span>
          </p>
-          ${itemChild.length>0?renderTreeMenu(item.id,level+1):''}
+          ${itemChild.length>0?renderTreeMenu(item.id,level+1,isOpen):''}
        </li>`
      }).join("")}
   </ul>
@@ -171,7 +196,7 @@ function renderFloders(){
 function render(){
    breadNav.innerHTML = renderBreacNav();
    floders.innerHTML = renderFloders();
-   treeMenu.innerHTML = renderTreeMenu(topId,0);
+   treeMenu.innerHTML = renderTreeMenu(topId,0,false);
 }
 // 树状菜单操作
 treeMenu.addEventListener("click",function(e){
@@ -357,7 +382,35 @@ function alertWarning(info){
           })
           
         }else if(e.target.classList.contains("icon-yidong")){
-          console.log("移动");
+          // console.log("移动");
+          let id = Number(this.floder.dataset.id);
+          let nowPid = getSelf(id).pid;
+          moveAlert(()=>{
+            // 移动时候的几种意外情况都是在这里判断的。
+            //1.没有newPid,或者移动到本身所在的位置，
+            if(newPid === null || nowPid == newPid){
+              alertWarning("您并没有移动本文件夹");
+              return false;
+            };
+            //2.把它移动到自己的子集里边去
+             let allChildren = getAllChildren(id);
+             let newMoveTo = getSelf(newPid);
+             allChildren.push(getSelf(id));
+             if(allChildren.includes(newMoveTo)){
+               alertWarning("不能把元素移动到自己的子文件里边");
+               return false;
+             }
+             if(testName(newPid,etSelf(id).title)){
+                 alertWarning("文件夹命名重复");
+                 return false;
+             }
+             moveData(id,newPid);
+             alertSuccess("移动文件夹成功");
+             nowId = newPid;
+             render();
+             return true;
+          })
+
         }else if(e.target.classList.contains("icon-zhongmingming")){
           console.log("重命名"); 
         }
@@ -402,5 +455,45 @@ function alertWarning(info){
 closConfirm.addEventListener('click',function(){
   confirmEl.classList.remove("confirm-show");
   mask.style.display = "none";
-})
+});
+
+// 移动到指定位置弹窗
+ 
+ let  moverAlertEl =document.querySelector(".move-alert");
+ let closMoveAlert = moverAlertEl.querySelector(".clos");
+ let moverAlertBtns = moverAlertEl.querySelectorAll(".confirm-btns a");
+ let moveAlertTreeMenu = moverAlertEl.querySelector('.move-alert-menu');
+ let newPid = null ;
+ moveAlertTreeMenu.addEventListener("click",(e)=>{
+  //  if
+  let item = e.target.tagName === "SPAN"?e.target.parentNode:e.target;
+  if(item.tagName == 'P'){
+    let Ptags = moveAlertTreeMenu.querySelectorAll("p");
+    Ptags.forEach((item)=>{
+       item.classList.remove("active");
+    });
+    item.classList.add("active");
+    newPid =  item.dataset.id;
+  } 
+  
+ })
+  // moveAlert();
+ function moveAlert(resolve,reject){
+   moveAlertTreeMenu.innerHTML = renderTreeMenu(topId,0,true);
+   moverAlertEl.classList.add("move-alert-show");
+   mask.style.display = "block";
+   newPid = null ;
+   closMoveAlert.onclick = function(){
+      moverAlertEl.classList.remove("move-alert-show");
+      mask.style.display = "none";
+   };
+   moverAlertBtns[0].onclick = function(){
+     resolve && resolve();
+   };
+   moverAlertBtns[1].onclick = function(){
+     reject && reject();
+   };
+ }
+
+// 移动到----功能
 }

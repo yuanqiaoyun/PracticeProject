@@ -79,7 +79,6 @@
   <!-- 弹窗内容的显示 -->
 <div class="alert alert-success">操作成功提示</div>
 <div class="alert alert-warning">操作警告提示</div>
-
 <!-- 右键菜单 -->
 <ul id="contextmenu">
     <li class="iconfont icon-lajitong">删除</li>
@@ -91,6 +90,39 @@
 <div class="confirm">
     <a class="clos iconfont icon-guanbi"></a>
     <p class="confirm-text iconfont icon-yiwen">确定要删除这个文件夹吗?</p>
+    <nav class="confirm-btns">
+        <a>确定</a>
+        <a>取消</a>
+    </nav>
+</div>
+
+<!-- 移动到弹窗 -->
+<div class="move-alert">
+    <h2 class="move-alert-title">选择存储位置</h2>
+    <a class="clos iconfont icon-guanbi"></a>
+    <div class="move-alert-menu tree-menu">
+        <ul>
+            <li class="open">
+                <p class="has-child"><span>一级菜单</span></p>
+                <ul>
+                    <li class="open">
+                        <p class="has-child active" style="padding-left: 68px;"><span>二级菜单</span></p>
+                        <ul>
+                            <li>
+                                <p style="padding-left: 96px;"><span>三级菜单</span></p>
+                            </li>
+                            <li>
+                                <p style="padding-left: 96px;"><span>三级菜单</span></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p style="padding-left: 68px;"><span>二级菜单</span></p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <nav class="confirm-btns">
         <a>确定</a>
         <a>取消</a>

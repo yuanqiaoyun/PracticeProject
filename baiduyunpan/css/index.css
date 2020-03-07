@@ -315,6 +315,18 @@ ul li{
     background: #fff;
     transition: .2s opacity, 0s .2s top;
 }
+.move-alert {
+    position: fixed;
+    left: 50%;
+    top: -100%;
+    transform: translate(-50%,-50%);
+    width: 360px;
+    padding: 5px 20px 40px;
+    border: 2px solid #55addc;
+    border-radius: 10px;
+    background: #fff;
+    transition: .2s opacity, 0s .2s top;
+}
 .confirm.confirm-show,
 .move-alert.move-alert-show {
     transition: .1s opacity;
@@ -364,4 +376,21 @@ ul li{
 .confirm-btns a:nth-child(1) {
     color: #fff;
     background: #55addc;
+}
+
+
+.move-alert-title {
+    font: 16px/44px "微软雅黑";
+    color: #000;
+}
+.move-alert-menu {
+    overflow: auto;
+    width: 358px;
+    height: 260px;
+    padding: 5px 0;
+    border: 1px solid #e1e8ed;
+}
+.move-alert .confirm-btns {
+    padding-left: 0;
+    justify-content: center;
 }
