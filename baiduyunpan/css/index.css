@@ -107,6 +107,16 @@ ul li{
   background:#ebeff0;
   text-align: center;
   cursor:pointer;
+  position: relative;
+  border:1px solid transparent;
+}
+.floder-item .echeked{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    display: none;
 }
 .floder-item:hover{
   background-color: #fff;
@@ -221,12 +231,63 @@ ul li{
 .checked input{
   display: none;   
 }
+.checked span:before {
+    display: none;
+    font-size: 18px;
+    line-height: 1;
+    color: #55addc;
+}
+.checked input:checked+span {
+    border: none;
+}
+.checked input:checked+span:before {
+    display: block;
+}
 .checked-all{
   float:left;
   margin:15px;
   width:18px;
 }
-
+/* 
+文件夹区域样式
+ */
+ .floder-item .checked {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    display: none;
+}
+ .editor {
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin: 14px auto 0;
+    display: none;
+    width: 120px;
+    height: 30px;
+    border: 1px solid #55addc;
+    text-align: center;
+    color: #69737f;
+    background: #fff;
+}
+.floder-item .checked span:before {
+    font-size: 16px;
+}
+.floder-item:hover {
+    background-color: #fff; 
+}
+.floder-item:hover .checked {
+    display: block;
+}
+.floder-item.active {
+    background-color: #fff; 
+    border-color: #55addc;
+    box-shadow: 0 0 5px rgba();
+}
+.floder-item.active .checked {
+    display: block;
+}
 /* 提示框以及漂浮物等样式 */
 .alert{
   position:fixed;

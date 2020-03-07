@@ -186,6 +186,11 @@ function renderFloders(){
      floderInner += `<li class="floder-item" data-id="${item.id}">
            <img src="./img/folder-b.png" alt=""/>
            <span class="floder-name">${item.title}</span>
+           <input type="text" class="editor" value="${item.title}">
+              <label class="checked">
+                <input type="checkbox" />
+                <span class="iconfont icon-checkbox-checked"></span>
+              </label>
          </li>`;
    })
    return floderInner;
@@ -400,7 +405,7 @@ function alertWarning(info){
                alertWarning("不能把元素移动到自己的子文件里边");
                return false;
              }
-             if(testName(newPid,etSelf(id).title)){
+             if(testName(newPid,getSelf(id).title)){
                  alertWarning("文件夹命名重复");
                  return false;
              }
@@ -410,9 +415,11 @@ function alertWarning(info){
              render();
              return true;
           })
-
         }else if(e.target.classList.contains("icon-zhongmingming")){
-          console.log("重命名"); 
+          // console.log("重命名"); 
+          reName(this.floder);
+          // alertSuccess("重命名成功");
+
         }
     });
   });
@@ -494,6 +501,39 @@ closConfirm.addEventListener('click',function(){
      reject && reject();
    };
  }
+// 重命名功能
 
-// 移动到----功能
+function reName(floder){
+  let floderName = floder.querySelector(".floder-name");
+  console.log(floderName);
+  let newNameInp = floder.querySelector("input");
+  let editor = floder.querySelector(".editor");
+  floderName.style.display = "none";
+  newNameInp.style.display = "block";
+  editor.select();
+  editor.onblur = function(){
+    // 原来的名字没变
+    if(editor.value == floderName.innerHTML){
+      floderName.style.display = "block";
+      newNameInp.style.display = "none";
+      return ;
+    }
+    // 名字为空
+    if(!editor.value.trim()){
+      alertWarning("新名字不能为空");
+      return ;
+    }
+    if(testName(nowId,editor.value)){
+      alertWarning("该名字已存在于当前文件夹中");
+      return ;
+    }
+    floderName.innerHTML = editor.value;
+    floderName.style.display = "block";
+    editor.style.display = "none";
+    let  slef = getSelf(floder.dataset.id);
+         slef.title = editor.value;
+         render();
+         alertSuccess("重命名成功");
+  }
+}
 }
